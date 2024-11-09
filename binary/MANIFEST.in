@@ -1,0 +1,2 @@
+recursive-include fastdds *.pyd
+recursive-include fastdds *.dll
