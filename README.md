@@ -42,6 +42,9 @@ If you don't know what Cmake or colcon is, here is the compile instructions.
    colcon build
    ```
 
+## Credits
+- [Fast-DDS-python](https://github.com/eProsima/Fast-DDS-python)
+
 # Fast-DDS-Python
 
 FastDDS python bind, 根据官方仓库进行魔改，可以不需要安装任何额外依赖进行编译。
@@ -79,3 +82,6 @@ cd [仓库目录]
 colcon build
 ```
 即可。
+
+## 引用
+- [Fast-DDS-python](https://github.com/eProsima/Fast-DDS-python)
