@@ -3,7 +3,7 @@ build
 *.html
 
 # pip build files
-binary/fastdds
+binary
 dist
 *.egg-info
 
