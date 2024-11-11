@@ -67,7 +67,7 @@ target_link_libraries(${PROJECT_NAME}
     )
 
 ###############################################################################
-# Generate python wheel setup environment
+# Generate setup.py
 ###############################################################################
 file(WRITE 
     ${PROJECT_SOURCE_DIR}/binary/setup.py 
@@ -132,12 +132,9 @@ add_custom_command(
             ${PROJECT_SOURCE_DIR}/binary/fastdds/__init__.py
     COMMAND pip install ${PROJECT_SOURCE_DIR}/binary
     COMMAND python -m build ${PROJECT_SOURCE_DIR}/binary
-    COMMAND ${CMAKE_COMMAND} -E rename 
-        ${PROJECT_SOURCE_DIR}/binary/dist/fastdds-${PROJECT_VERSION}-py3-none-any.whl 
-        ${PROJECT_SOURCE_DIR}/binary/dist/fastdds-${PROJECT_VERSION}-py${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-py${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-win_amd64.whl 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different 
-        ${PROJECT_SOURCE_DIR}/binary/dist/fastdds-${PROJECT_VERSION}-py${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-py${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-win_amd64.whl 
-        ${PROJECT_SOURCE_DIR}/binary/wheels
+        ${PROJECT_SOURCE_DIR}/binary/dist/fastdds-${PROJECT_VERSION}-py3-none-any.whl 
+        ${PROJECT_SOURCE_DIR}/binary/wheels/fastdds-${PROJECT_VERSION}-py${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-py${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-win_amd64.whl 
     COMMAND_EXPAND_LISTS
     VERBATIM
 )
