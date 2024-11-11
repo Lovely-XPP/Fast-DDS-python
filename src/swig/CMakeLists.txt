@@ -134,7 +134,7 @@ add_custom_command(
     COMMAND python -m build ${PROJECT_SOURCE_DIR}/binary
     COMMAND ${CMAKE_COMMAND} -E copy_if_different 
         ${PROJECT_SOURCE_DIR}/binary/dist/fastdds-${PROJECT_VERSION}-py3-none-any.whl 
-        ${PROJECT_SOURCE_DIR}/binary/wheels/fastdds-${PROJECT_VERSION}-py${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-py${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-win_amd64.whl 
+        ${PROJECT_SOURCE_DIR}/binary/wheels/fastdds-${PROJECT_VERSION}-cp${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-cp${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-win_amd64.whl 
     COMMAND_EXPAND_LISTS
     VERBATIM
 )
