@@ -67,6 +67,46 @@ target_link_libraries(${PROJECT_NAME}
     )
 
 ###############################################################################
+# Generate python wheel setup environment
+###############################################################################
+file(WRITE 
+    ${PROJECT_SOURCE_DIR}/binary/setup.py 
+    "# Generate by CMake, Do not EDIT.
+import setuptools
+import sysconfig
+
+setuptools.setup(
+    name='fastdds',
+    version='${PROJECT_VERSION}',
+    description='Python bindings for Fast DDS.',
+    author='',
+    author_email='',
+    python_requires=f'==\{sysconfig.get_python_version()\}.*',
+    packages=setuptools.find_packages(),
+   	include_package_data=True
+)"
+)
+
+# pyproject.toml
+file(WRITE 
+    ${PROJECT_SOURCE_DIR}/binary/pyproject.toml
+    "# Generate by CMake, Do not EDIT.
+[build-system]
+requires = [\"setuptools\"]
+build-backend = \"setuptools.build_meta\"
+    "
+)
+
+# MANIFEST.in
+file(WRITE 
+    ${PROJECT_SOURCE_DIR}/binary/MANIFEST.in
+    "# Generate by CMake, Do not EDIT.
+recursive-include fastdds *.pyd
+recursive-include fastdds *.dll
+    "
+)
+
+###############################################################################
 # Copy binary
 ###############################################################################
 # modify fastdds.py
@@ -76,6 +116,7 @@ add_custom_command(
     COMMAND_EXPAND_LISTS
     VERBATIM
 )
+
 # generate wheel files
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
@@ -90,6 +131,13 @@ add_custom_command(
             ${PROJECT_SOURCE_DIR}/binary/fastdds/fastdds.py
             ${PROJECT_SOURCE_DIR}/binary/fastdds/__init__.py
     COMMAND pip install ${PROJECT_SOURCE_DIR}/binary
+    COMMAND python -m build ${PROJECT_SOURCE_DIR}/binary
+    COMMAND ${CMAKE_COMMAND} -E rename 
+        ${PROJECT_SOURCE_DIR}/binary/dist/fastdds-${PROJECT_VERSION}-py3-none-any.whl 
+        ${PROJECT_SOURCE_DIR}/binary/dist/fastdds-${PROJECT_VERSION}-py${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-py${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-win_amd64.whl 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+        ${PROJECT_SOURCE_DIR}/binary/dist/fastdds-${PROJECT_VERSION}-py${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-py${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-win_amd64.whl 
+        ${PROJECT_SOURCE_DIR}/binary/wheels
     COMMAND_EXPAND_LISTS
     VERBATIM
 )

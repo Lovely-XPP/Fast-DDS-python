@@ -27,7 +27,7 @@ If you don't know what Cmake or colcon is, here is the compile instructions.
 2. Install necessary python packages
 
    ```
-   pip install -U colcon-common-extensions vcstool
+   pip install -U colcon-common-extensions vcstool build
    ```
 
 3. Use `cd` command as below:
@@ -68,7 +68,7 @@ pip install fastdds-2.1.0-py3-none-any.whl
 安装必要的python库
 
 ```bash
-pip install -U colcon-common-extensions vcstoolxxxxxxxxxx pip install -U colcon-common-extensions vcstoolpip install
+pip install -U colcon-common-extensions vcstool build
 ```
 
 使用`cd`命令
