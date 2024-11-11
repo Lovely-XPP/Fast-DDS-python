@@ -38,6 +38,7 @@ set(fastdds_DIR "${PROJECT_SOURCE_DIR}/thirdparty/fastdds-3.1.0/cmake")
 # OpenSSL
 set(ENV{OPENSSL_USE_STATIC_LIBS} TRUE)
 set(ENV{OPENSSL_ROOT_DIR} "${PROJECT_SOURCE_DIR}/thirdparty/openssl-3.1.4")
+find_package(OpenSSL REQUIRED)
 # SWIG
 set(SWIG_EXECUTABLE ${PROJECT_SOURCE_DIR}/thirdparty/swigwin-4.1.1/swig.exe)
 find_package(SWIG)

@@ -64,6 +64,7 @@ target_link_libraries(${PROJECT_NAME}
     Python3::Module
     fastcdr
     fastdds
+    ${OPENSSL_LIBRARIES}
     )
 
 ###############################################################################
@@ -124,8 +125,6 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "$<TARGET_FILE_DIR:${PROJECT_NAME}>/_fastdds_python.pyd"
             "$<TARGET_FILE_DIR:${PROJECT_NAME}>/../fastdds.py"
-            "${PROJECT_SOURCE_DIR}/thirdparty/fastdds-3.1.0/bin/x64Win64VS2019/libssl-3-x64.dll"
-            "${PROJECT_SOURCE_DIR}/thirdparty/fastdds-3.1.0/bin/x64Win64VS2019/libcrypto-3-x64.dll"
             ${PROJECT_SOURCE_DIR}/binary/fastdds
     COMMAND ${CMAKE_COMMAND} -E rename 
             ${PROJECT_SOURCE_DIR}/binary/fastdds/fastdds.py
