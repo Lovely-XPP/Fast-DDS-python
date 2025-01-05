@@ -33,28 +33,37 @@ project(fastdds_python VERSION 2.1.0)
 # Dependencies
 ###############################################################################
 # Fastdds
-set(fastcdr_DIR "${PROJECT_SOURCE_DIR}/thirdparty/fastdds-3.1.0/cmake")
-set(fastdds_DIR "${PROJECT_SOURCE_DIR}/thirdparty/fastdds-3.1.0/cmake")
+add_subdirectory(thirdparty/Fast-DDS)
 # OpenSSL
 set(ENV{OPENSSL_USE_STATIC_LIBS} TRUE)
 set(ENV{OPENSSL_ROOT_DIR} "${PROJECT_SOURCE_DIR}/thirdparty/openssl-3.1.4")
 find_package(OpenSSL REQUIRED)
 # SWIG
-set(SWIG_EXECUTABLE ${PROJECT_SOURCE_DIR}/thirdparty/swigwin-4.1.1/swig.exe)
-find_package(SWIG)
-if (NOT SWIG_FOUND)
-    # Trick to find swig4.1 in Ubuntu noble.
-    find_program(SWIG_EXECUTABLE NAMES swig4.1 swig)
-    find_package(SWIG REQUIRED)
-endif()
+if(WIN32)
+  set(SWIG_EXECUTABLE ${PROJECT_SOURCE_DIR}/thirdparty/swig-4.1.1/swig.exe)
+  find_package(SWIG)
+  if (NOT SWIG_FOUND)
+      # Trick to find swig4.1 in Ubuntu noble.
+      find_program(SWIG_EXECUTABLE NAMES swig4.1 swig)
+      find_package(SWIG REQUIRED)
+  endif()
+endif(WIN32)
+if(APPLE)
+  set(SWIG_EXECUTABLE ${PROJECT_SOURCE_DIR}/thirdparty/swig-4.1.1/swig)
+  set(SWIG_DIR ${PROJECT_SOURCE_DIR}/thirdparty/swig-4.1.1)
+  find_package(SWIG)
+  if (NOT SWIG_FOUND)
+      # Trick to find swig4.1 in Ubuntu noble.
+      find_program(SWIG_EXECUTABLE NAMES swig4.1 swig)
+      find_package(SWIG REQUIRED)
+  endif()
+endif(APPLE)
+set(SWIG_LIB_DIR "${PROJECT_SOURCE_DIR}/thirdparty/swig-4.1.1/Lib")
 
 include(${SWIG_USE_FILE})
-set(CMAKE_SWIG_FLAGS "")
+set(CMAKE_SWIG_FLAGS "-I${SWIG_LIB_DIR}/python" "-I${SWIG_LIB_DIR}")
 
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
-
-find_package(fastcdr REQUIRED)
-find_package(fastdds 3 REQUIRED)
 
 ###############################################################################
 # Project subdirectories

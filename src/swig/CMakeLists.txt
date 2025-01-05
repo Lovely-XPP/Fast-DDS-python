@@ -103,6 +103,8 @@ file(WRITE
     ${PROJECT_SOURCE_DIR}/binary/MANIFEST.in
     "# Generate by CMake, Do not EDIT.
 recursive-include fastdds *.pyd
+recursive-include fastdds *.dylib
+recursive-include fastdds *.so
 recursive-include fastdds *.dll
     "
 )
@@ -111,15 +113,18 @@ recursive-include fastdds *.dll
 # Copy binary
 ###############################################################################
 # modify fastdds.py
-add_custom_command(
+if(WIN32)
+    add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND powershell -Command "(Get-Content '$<TARGET_FILE_DIR:${PROJECT_NAME}>/../fastdds.py') -replace 'if\ __import__', '# if  __import__' | Set-Content '$<TARGET_FILE_DIR:${PROJECT_NAME}>/../fastdds.py'"
     COMMAND_EXPAND_LISTS
     VERBATIM
 )
+endif(WIN32)
 
 # generate wheel files
-add_custom_command(
+if(WIN32)
+    add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_SOURCE_DIR}/binary/fastdds
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -129,6 +134,7 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E rename 
             ${PROJECT_SOURCE_DIR}/binary/fastdds/fastdds.py
             ${PROJECT_SOURCE_DIR}/binary/fastdds/__init__.py
+    COMMAND pip install build
     COMMAND pip install ${PROJECT_SOURCE_DIR}/binary
     COMMAND python -m build ${PROJECT_SOURCE_DIR}/binary
     COMMAND ${CMAKE_COMMAND} -E copy_if_different 
@@ -137,3 +143,33 @@ add_custom_command(
     COMMAND_EXPAND_LISTS
     VERBATIM
 )
+endif(WIN32)
+
+if(APPLE)
+    execute_process(
+        COMMAND sw_vers -productVersion
+        OUTPUT_VARIABLE MACOS_VERSION
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    string(REGEX MATCH "[0-9]+" MACOS_VERSION_MAJOR "${MACOS_VERSION}")
+    message(STATUS "Detected macOS version: ${MACOS_VERSION_MAJOR}")
+    add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_SOURCE_DIR}/binary/fastdds
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "$<TARGET_FILE_DIR:${PROJECT_NAME}>/fastdds.py"
+            ${PROJECT_SOURCE_DIR}/binary/fastdds/__init__.py
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "$<TARGET_FILE_DIR:${PROJECT_NAME}>/_fastdds_python.dylib"
+            ${PROJECT_SOURCE_DIR}/binary/fastdds/_fastdds_python.so
+    COMMAND pip install build
+    COMMAND pip install ${PROJECT_SOURCE_DIR}/binary
+    COMMAND python3 -m build ${PROJECT_SOURCE_DIR}/binary
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+        ${PROJECT_SOURCE_DIR}/binary/dist/fastdds-${PROJECT_VERSION}-py3-none-any.whl 
+        ${PROJECT_SOURCE_DIR}/binary/wheels/fastdds-${PROJECT_VERSION}-cp${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-cp${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}-macosx_${MACOS_VERSION_MAJOR}_0_${CMAKE_HOST_SYSTEM_PROCESSOR}.whl 
+    COMMAND_EXPAND_LISTS
+    VERBATIM
+)
+endif(APPLE)
+
