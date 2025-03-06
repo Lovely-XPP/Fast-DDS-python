@@ -1,76 +1,102 @@
-# Python binding for Fast DDS
+# Fast-DDS-Python
 
-<a href="http://www.eprosima.com"><img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSd0PDlVz1U_7MgdTe0FRIWD0Jc9_YH-gGi0ZpLkr-qgCI6ZEoJZ5GBqQ" align="left" hspace="8" vspace="2" width="100" height="100" ></a>
+This repo is modified from origin repo [Fast-DDS-Python](https://github.com/eProsima/Fast-DDS-python).
 
-[![License](https://img.shields.io/github/license/eProsima/Fast-DDS-python.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Releases](https://img.shields.io/github/v/release/eProsima/Fast-DDS-python?sort=semver)](https://github.com/eProsima/Fast-DDS-python/releases)
-[![Issues](https://img.shields.io/github/issues/eProsima/Fast-DDS-python.svg)](https://github.com/eProsima/Fast-DDS-python/issues)
-[![Forks](https://img.shields.io/github/forks/eProsima/Fast-DDS-python.svg)](https://github.com/eProsima/Fast-DDS-python/network/members)
-[![Stars](https://img.shields.io/github/stars/eProsima/Fast-DDS-python.svg)](https://github.com/eProsima/Fast-DDS-python/stargazers)
-[![Fast DDS Python Ubuntu CI (nightly)](https://github.com/eProsima/Fast-DDS-Python/actions/workflows/nightly-ubuntu-ci.yml/badge.svg)](https://github.com/eProsima/Fast-DDS-Python/actions/workflows/nightly-ubuntu-ci.yml)
-[![Fast DDS Python Windows CI (nightly)](https://github.com/eProsima/Fast-DDS-Python/actions/workflows/nightly-windows-ci.yml/badge.svg)](https://github.com/eProsima/Fast-DDS-Python/actions/workflows/nightly-windows-ci.yml)
+Main Feature:
 
-*eProsima Fast DDS Python* is a Python binding for the [*eProsima Fast DDS*](https://github.com/eProsima/Fast-DDS) C++ library.
-This is a work in progress, but ultimately the goal is having the complete *Fast DDS* API available in Python.
-Two packages are available in this repository: the proper Python binding, `fastdds_python`, and the examples, `fastdds_python_examples`.
+- Support cmake or colcon build without any addtion dependence installed
+- Support install to Python site-packages directly (with pip) - it complete after cmake or colcon build
+- Provide binary `whl` file with major python version.
 
-## Commercial support
-
-Looking for commercial support? Write us to info@eprosima.com
-
-Find more about us at [eProsima’s webpage](https://eprosima.com/).
-
-## Installation guide
-
-This tutorial shows how to build *Fast DDS Python* using [colcon](https://colcon.readthedocs.io), a command line tool to build sets of software packages.
-To do so, `colcon` and `vcstool` need to be installed:
+## Support Python
 
 ```bash
-pip install -U colcon-common-extensions vcstool
+python >= 3.8
 ```
 
-### Dependencies
+## Binary
 
-*Fast DDS Python* depends on [Fast DDS](https://github.com/eProsima/Fast-DDS) and [Fast CDR](https://github.com/eProsima/Fast-CDR).
-For simplicity, this tutorial will build these dependencies alongside the binding itself.
-More advanced users can build or link to this packages separately.
-
-Install *Fast DDS* dependencies running:
+You can install the `whl` file from the release page directly with your own python version.
 
 ```bash
-sudo apt update
-sudo apt install -y \
-    libasio-dev \
-    libtinyxml2-dev
+pip install XXXXXX.whl
 ```
 
-Additionally, *Fast DDS Python* also depends on a [SWIG](http://www.swig.org/) version lower than 4.2 (4.1 is recommended) and python3-dev. Install these dependencies running:
+## Source 
+
+You can use Cmake or colcon to build this project.
+
+If you don't know what Cmake or colcon is, here is the compile instructions.
+
+1. Open  `Developer PowerShell for VS 20XX`, and it will open a terminal.
+
+2. Install necessary python packages
+
+   ```bash
+   pip install -U colcon-common-extensions vcstool build
+   ```
+
+3. Use `cd` command as below:
+
+   ```bash
+   cd [Path to this repo]/fastdds_python
+   ```
+
+4. Then build the project
+
+   ```bash
+   chcp 65001 # change encode to utf-8
+   colcon build
+   ```
+
+## Credits
+- [Fast-DDS-python](https://github.com/eProsima/Fast-DDS-python)
+
+# Fast-DDS-Python
+
+FastDDS python bind, 根据官方仓库进行魔改，可以不需要安装任何额外依赖进行编译。
+
+主要功能：
+
+- 支持直接安装到Python库
+- 支持 CMake编译 / colcon 编译
+- 支持 pip 直接安装
+- 提供主流python版本的 `whl` 二进制文件
+
+## 支持的Python版本
+
 ```bash
-sudo apt update
-sudo apt install -y \
-    swig4.1 \
-    libpython3-dev
+python >= 3.8
 ```
 
-### Build and install
+## 二进制包
+直接前往`Release`下载对应python版本的二进制包，下载后运行下面的命令即可
+```bash
+pip install XXXXXX.whl
+```
+
+## 源码编译
+支持CMake编译或 colcon 编译。
+如果你不知道什么是CMake编译或 colcon 编译，请使用`Developer PowerShell for VS 20XX`打开，出现一个终端，
+
+安装必要的python库
 
 ```bash
-# Change directory to the location where the colcon workspace will be created
-cd <path_to_ws>
-# Create workspace directory
-mkdir -p fastdds_python_ws/src
-cd fastdds_python_ws
-# Get workspace setup file
-wget https://raw.githubusercontent.com/eProsima/Fast-DDS-python/main/fastdds_python.repos
-# Download repositories
-vcs import src < fastdds_python.repos
-# Build the workspace
+pip install -U colcon-common-extensions vcstool build
+```
+
+使用`cd`命令
+
+```bash
+cd [仓库目录]/fastdds_python
+```
+然后输入
+
+```bash
+chcp 65001 # change encode to utf-8
 colcon build
 ```
+即可。
 
-Please, refer to [colcon documentation](https://colcon.readthedocs.io/en/released/reference/verb/build.html) for more information, such as building only one of the packages.
-
-## Python example
-
-Fast DDS documentation includes a first publisher-subscriber application using Python.
-Please refer to [this section](https://fast-dds.docs.eprosima.com/en/latest/fastdds/getting_started/simple_python_app/simple_python_app.html#) for more information.
+## 引用
+- [Fast-DDS-python](https://github.com/eProsima/Fast-DDS-python)

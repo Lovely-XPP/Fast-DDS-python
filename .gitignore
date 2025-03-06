@@ -3,6 +3,7 @@
 build
 install
 log
+binary
 
 # ignore python folders
 __pycache__

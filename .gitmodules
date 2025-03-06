@@ -1,0 +1,3 @@
+[submodule "fastdds_python/thirdparty/Fast-DDS"]
+	path = fastdds_python/thirdparty/Fast-DDS
+	url = https://github.com/Lovely-XPP/Fast-DDS

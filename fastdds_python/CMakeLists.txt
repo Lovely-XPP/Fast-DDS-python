@@ -32,24 +32,44 @@ if(NOT BUILD_TESTING)
     set(BUILD_TESTING OFF CACHE BOOL "Enable testing" FORCE)
 endif()
 
+# disable MSVC warning
+if(MSVC)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /w")
+endif(MSVC)
+
 ###############################################################################
 # Dependencies
 ###############################################################################
-
-find_package(SWIG)
+# Fastdds
+add_subdirectory(thirdparty/Fast-DDS)
+# OpenSSL
+set(ENV{OPENSSL_USE_STATIC_LIBS} TRUE)
+set(ENV{OPENSSL_ROOT_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/openssl-3.1.4")
+set(OPENSSL_USE_STATIC_LIBS TRUE)
+set(OPENSSL_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/openssl-3.1.4")
+find_package(OpenSSL REQUIRED)
+# SWIG
+# WIN32
+if(WIN32)
+  set(SWIG_EXECUTABLE ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/swig-4.1.1/swig.exe)
+  find_package(SWIG REQUIRED)
+endif(WIN32)
+# APPLE
+if(APPLE)
+  set(SWIG_EXECUTABLE ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/swig-4.1.1/swig)
+  set(SWIG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/swig-4.1.1)
+  find_package(SWIG REQUIRED)
+endif(APPLE)
+# Trick to find swig4.1 in Ubuntu noble.
 if (NOT SWIG_FOUND)
-    # Trick to find swig4.1 in Ubuntu noble.
-    find_program(SWIG_EXECUTABLE NAMES swig4.1 swig)
-    find_package(SWIG REQUIRED)
+  find_program(SWIG_EXECUTABLE NAMES swig4.1 swig)
+  find_package(SWIG REQUIRED)
 endif()
-
+set(SWIG_LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/swig-4.1.1/Lib")
 include(${SWIG_USE_FILE})
-set(CMAKE_SWIG_FLAGS "")
+set(CMAKE_SWIG_FLAGS "-I${SWIG_LIB_DIR}/python" "-I${SWIG_LIB_DIR}")
 
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
-
-find_package(fastcdr REQUIRED)
-find_package(fastdds 3 REQUIRED)
 
 ###############################################################################
 # Project subdirectories
@@ -60,7 +80,7 @@ add_subdirectory(src/swig)
 ###############################################################################
 # Testing options
 ###############################################################################
-enable_testing()
+# enable_testing()
 include(CTest)
 
 if (BUILD_TESTING)
